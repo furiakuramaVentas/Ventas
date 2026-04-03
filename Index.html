@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>FURIAKURAMA 👻</title>
+
+<style>
+body {
+    margin:0;
+    font-family: Arial;
+    background: radial-gradient(circle, #0a0a0a, #000);
+    color:white;
+    text-align:center;
+}
+
+.header {
+    padding:20px;
+    font-size:30px;
+    font-weight:bold;
+    color:gold;
+    text-shadow:0 0 20px gold;
+}
+
+.container {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+.card {
+    background:#111;
+    margin:15px;
+    padding:20px;
+    width:260px;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(255,215,0,0.3);
+    transition:0.3s;
+}
+.card:hover {
+    transform:scale(1.05);
+    box-shadow:0 0 25px gold;
+}
+
+.btn {
+    display:inline-block;
+    margin-top:10px;
+    padding:10px 15px;
+    background:gold;
+    color:black;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.key-box {
+    margin:20px;
+    padding:15px;
+    background:#111;
+    border-radius:10px;
+    box-shadow:0 0 10px gold;
+}
+
+.loader {
+    display:none;
+    margin-top:10px;
+    font-size:18px;
+}
+
+.copy {
+    margin-top:10px;
+    background:#222;
+    padding:8px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:0.3s;
+}
+.copy:hover {
+    background:gold;
+    color:black;
+}
+
+/* EFECTO TEXTO */
+.success {
+    color:lime;
+    font-weight:bold;
+}
+
+/* PARTICLES */
+canvas {
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:-1;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="header">
+🔥 FURIAKURAMA MODS  🔥
+</div>
+
+<div class="key-box">
+    <h3>Generar Key</h3>
+    <button class="btn" onclick="genKey()">GENERAR</button>
+    <p id="key"></p>
+    <div class="copy" onclick="copyKey()" id="copyBtn">📋 Copiar Key</div>
+</div>
+
+<div class="container">
+
+<div class="card">
+<h2>CUBAN MODS V4</h2>
+<p>✔ FURIA<br>✔ MODS<br>✔ Sin Ban</p>
+<button class="btn" onclick="download()">DESCARGAR</button>
+<div class="loader" id="loader">⏳ Preparando descarga...</div>
+</div>
+
+<div class="card">
+<h2>NO DISPONIBLE</h2>
+<p>💎 Premium Features</p>
+<button class="btn" onclick="download()">DESCARGAR</button>
+</div>
+
+</div>
+
+<audio id="sound" src="https://www.myinstants.com/media/sounds/click.mp3"></audio>
+
+<script>
+
+// GENERAR KEY
+function genKey(){
+    let key = "FURIA-" + Math.random().toString(36).substring(2,10).toUpperCase();
+    document.getElementById("key").innerText = key;
+    localStorage.setItem("key", key);
+
+    let btn = document.getElementById("copyBtn");
+    btn.innerText = "📋 Copiar Key";
+    btn.classList.remove("success");
+}
+
+// COPIAR KEY PRO
+function copyKey(){
+    let key = document.getElementById("key").innerText;
+
+    if(!key){
+        document.getElementById("copyBtn").innerText = "⚠️ Genera una key primero";
+        return;
+    }
+
+    navigator.clipboard.writeText(key).then(()=>{
+        let btn = document.getElementById("copyBtn");
+        btn.innerText = "✅ Copiada";
+        btn.classList.add("success");
+
+        setTimeout(()=>{
+            btn.innerText = "📋 Copiar Key";
+            btn.classList.remove("success");
+        },2000);
+    }).catch(()=>{
+        let temp = document.createElement("textarea");
+        temp.value = key;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+
+        let btn = document.getElementById("copyBtn");
+        btn.innerText = "✅ Copiada";
+    });
+}
+
+// DESCARGA PRO
+function download(){
+    let savedKey = localStorage.getItem("key");
+
+    if(!savedKey){
+        alert("Genera una key primero!");
+        return;
+    }
+
+    let loader = document.getElementById("loader");
+    loader.style.display = "block";
+
+    let count = 3;
+    let interval = setInterval(()=>{
+        loader.innerText = "⏳ Descargando en " + count + "...";
+        count--;
+
+        if(count < 0){
+            clearInterval(interval);
+            document.getElementById("sound").play();
+
+            window.location.href = "https://www.mediafire.com/file/kc5bjzlqtwyvfkc/Cubanmods-4.1.apks/file";
+        }
+
+    },1000);
+}
+
+// PARTICLES
+let canvas = document.getElementById("bg");
+let ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for(let i=0;i<120;i++){
+    particles.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        r:Math.random()*2
+    });
+}
+
+function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="gold";
+
+    particles.forEach(p=>{
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fill();
+        p.y+=0.6;
+        if(p.y>canvas.height) p.y=0;
+    });
+
+    requestAnimationFrame(draw);
+}
+
+draw();
+
+</script>
+
+</body>
+</html>
